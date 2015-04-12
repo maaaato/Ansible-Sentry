@@ -1,0 +1,25 @@
+---
+  
+- name: requirements modules
+  apt: name={{ item }} state=installed
+  with_items:
+    - python-dev
+    - libxml2-dev
+    - libxslt-dev
+    - zlib1g-dev
+    - libffi-dev
+    - libssl-dev
+  when: ansible_os_family == "Debian"
+
+- name: workon sentry
+  shell: /bin/bash -lc 'workon {{ sentry_virtualenv }}'
+  sudo_user: vagrant  
+  
+- name: sentry check
+  shell: pip freeze | grep sentry && echo 'Found' || echo ''
+  register: pip
+
+- name: pip install sentry
+  command: pip install -U sentry
+  when: pip.stdout == ""
+
