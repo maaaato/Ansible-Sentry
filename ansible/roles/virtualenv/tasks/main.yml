@@ -36,7 +36,5 @@
 
 - name: cp virtualenvwrapper.sh
   shell: cp {{ which_virtualenvwrapper.stdout }} /etc/profile.d/
-
   
-- name: mkvirtualenv sentry
-  shell: /bin/bash -lc 'mkvirtualenv {{ sentry_virtualenv }}'
+  

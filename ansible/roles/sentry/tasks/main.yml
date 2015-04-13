@@ -1,4 +1,8 @@
 ---
+
+- name: mkvirtualenv sentry
+  command: su - {{ sentry_user }}  -l -c 'mkvirtualenv {{ sentry_virtualenv }}'
+  remote_user: vagrant
   
 - name: requirements modules
   apt: name={{ item }} state=installed
@@ -11,15 +15,14 @@
     - libssl-dev
   when: ansible_os_family == "Debian"
 
-- name: workon sentry
-  shell: /bin/bash -lc 'workon {{ sentry_virtualenv }}'
-  sudo_user: vagrant  
+#- name: workon sentry
+#  command: su - {{ sentry_user }} -l -c 'workon {{ sentry_virtualenv }}'
   
 - name: sentry check
-  shell: pip freeze | grep sentry && echo 'Found' || echo ''
+  shell: su - {{ sentry_user }} -c "pip freeze | grep sentry && echo 'Found' || echo ''"
   register: pip
 
 - name: pip install sentry
-  command: pip install -U sentry
+  command: su - {{ sentry_user }} -c 'sudo /home/vagrant/.virtualenvs/sentry/bin/pip install -U sentry'
   when: pip.stdout == ""
 
