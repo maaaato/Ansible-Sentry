@@ -14,9 +14,6 @@
     - libffi-dev
     - libssl-dev
   when: ansible_os_family == "Debian"
-
-#- name: workon sentry
-#  command: su - {{ sentry_user }} -l -c 'workon {{ sentry_virtualenv }}'
   
 - name: sentry check
   shell: su - {{ sentry_user }} -c "pip freeze | grep sentry && echo 'Found' || echo ''"
