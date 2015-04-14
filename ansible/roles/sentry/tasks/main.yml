@@ -23,6 +23,6 @@
   register: pip
 
 - name: pip install sentry
-  command: su - {{ sentry_user }} -c 'sudo /home/vagrant/.virtualenvs/sentry/bin/pip install -U sentry'
+  command: su - {{ sentry_user }} -c 'sudo /home/{{ sentry_user }}/.virtualenvs/{{ sentry_virtualenv }}/bin/pip install -U sentry'
   when: pip.stdout == ""
 
