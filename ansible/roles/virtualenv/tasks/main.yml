@@ -1,40 +1,43 @@
 ---
 
-- name: pip check
-  shell: which pip && echo 'Found' || echo ''
-  register: pip  
+- name: check pip installed
+  shell: which pip
+  register: result
+  failed_when: result.rc not in [0, 1]
   
 - name: get get-pip
   get_url: >
     url=https://bootstrap.pypa.io/get-pip.py
     dest={{ get_pip_src }}
-  when: pip.stdout == ""
+  when: result.rc == 1
 
 - name: install pip
-  shell: cd {{ get_pip_src }} && python get-pip.py
-  when: pip.stdout == ""  
+  command: python get-pip.py chdir={{ get_pip_src }}
+  when: result.rc == 1
   
-- name: pip virtualenv check
-  shell: pip freeze | grep virtualenv && echo 'Found' || echo ''
-  register: pip
+- name: check virtualenv installed
+  shell: pip freeze | grep -q virtualenv
+  register: result
+  failed_when: result.rc not in [0, 1]  
   
-- name: pip install virtualenv
+- name: install virtualenv
   command: pip install -U virtualenv
-  when: pip.stdout == ""
+  when: result.rc == 1
 
-- name: pip virtualenvwrapper check
-  shell: pip freeze | grep virtualenvwrapper && echo 'Found' || echo ''
-  register: pip  
-    
-- name: pip install virtualenvwrapper
+- name: check virtualenvwrapper installed
+  shell: pip freeze | grep -q virtualenvwrapper
+  register: result
+  failed_when: result.rc not in [0, 1]
+  
+- name: install virtualenvwrapper
   command: pip install virtualenvwrapper
-  when: pip.stdout == ""
+  when: result.rc == 1  
 
 - name: which virtualenvwrapper.sh
   command: which virtualenvwrapper.sh
   register: which_virtualenvwrapper
 
-- name: cp virtualenvwrapper.sh
-  shell: cp {{ which_virtualenvwrapper.stdout }} /etc/profile.d/
+- name: link virtualenvwrapper.sh
+  file: src={{ which_virtualenvwrapper.stdout }} dest=/etc/profile.d/virtualenvwrapper.sh state=link
   
   
