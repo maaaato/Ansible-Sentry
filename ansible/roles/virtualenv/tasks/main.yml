@@ -1,5 +1,4 @@
 ---
-
 - name: check pip installed
   shell: which pip
   register: result
@@ -39,5 +38,3 @@
 
 - name: link virtualenvwrapper.sh
   file: src={{ which_virtualenvwrapper.stdout }} dest=/etc/profile.d/virtualenvwrapper.sh state=link
-  
-  

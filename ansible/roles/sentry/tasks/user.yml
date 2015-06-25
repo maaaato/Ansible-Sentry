@@ -1,0 +1,6 @@
+---
+- name: ユーザ作成
+  user: name={{ sentry_user }} shell=/bin/bash
+
+- name: create .ssh dir
+  file: path=/home/{{ sentry_user }}/.ssh state=directory owner={{ sentry_user }} group={{ sentry_user }} mode=0700

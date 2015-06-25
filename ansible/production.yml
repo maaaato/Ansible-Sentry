@@ -1,6 +1,21 @@
 ---
 - hosts: all
   sudo: yes
-  roles:
-    - virtualenv
-    - sentry
+#  roles:
+#    - mysql
+#    - virtualenv
+#    - sentry
+    
+  pre_tasks:
+    - name: initial pkg install
+      apt: pkg={{ item }} update_cache=yes
+      with_items:
+        - gcc
+  tasks:
+    - name: postfix
+      debconf: name=postifx question="postfix/mailname" value="sandbox" vtype="string"
+    - name: Set Postfix option type as internet site
+      debconf: name=postfix question="postfix/main_mailer_type" value="'Internet Site'" vtype="string"
+    - name: install postfix
+      apt: name=postfix state=present
+

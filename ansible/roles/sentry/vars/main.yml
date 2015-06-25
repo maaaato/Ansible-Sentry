@@ -1,2 +1,2 @@
 sentry_virtualenv: "sentry"
-sentry_user: "vagrant"
+sentry_user: "sentry"

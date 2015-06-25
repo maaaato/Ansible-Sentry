@@ -1,0 +1,28 @@
+---
+- name: libaio1インストール
+  apt: pkg=libaio1
+
+- name: mysql clientダウンロード
+  get_url: url=http://dev.mysql.com/get/Downloads/MySQL-5.6/{{ item }} dest=/usr/local/src/{{ item }}
+  with_items:
+    - mysql-common_5.6.23-1ubuntu14.04_amd64.deb
+    - libmysqlclient18_5.6.23-1ubuntu14.04_amd64.deb
+    - libmysqlclient-dev_5.6.23-1ubuntu14.04_amd64.deb
+    - mysql-community-client_5.6.23-1ubuntu14.04_amd64.deb
+    - mysql-client_5.6.23-1ubuntu14.04_amd64.deb
+
+- name: mysql-commonインストール
+  apt: deb=/usr/local/src/mysql-common_5.6.23-1ubuntu14.04_amd64.deb
+
+- name: mysql-community-clientインストール
+  apt: deb=/usr/local/src/mysql-community-client_5.6.23-1ubuntu14.04_amd64.deb
+
+- name: mysql-clientインストール
+  apt: deb=/usr/local/src/mysql-client_5.6.23-1ubuntu14.04_amd64.deb
+
+- name: libmysqlclientインストール
+  apt: deb=/usr/local/src/libmysqlclient18_5.6.23-1ubuntu14.04_amd64.deb
+
+- name: libmysqlclient-devインストール
+  apt: deb=/usr/local/src/libmysqlclient-dev_5.6.23-1ubuntu14.04_amd64.deb
+

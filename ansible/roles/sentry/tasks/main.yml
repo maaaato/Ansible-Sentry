@@ -1,17 +1,20 @@
 ---
+- include: user.yml
 
 - name: mkvirtualenv sentry
   command: su - {{ sentry_user }}  -l -c 'mkvirtualenv {{ sentry_virtualenv }}'
-  remote_user: vagrant
+  when: result.rc == 1
   
 - name: requirements modules
   apt: name={{ item }} state=installed
   with_items:
-    - python-dev
+    - python2.7-dev
     - libxml2-dev
     - libxslt-dev
     - zlib1g-dev
     - libffi-dev
+    - autoconf
+    - g++
     - libssl-dev
   when: ansible_os_family == "Debian"
   
@@ -19,7 +22,11 @@
   shell: su - {{ sentry_user }} -c "pip freeze | grep sentry && echo 'Found' || echo ''"
   register: pip
 
+
 - name: pip install sentry
-  command: su - {{ sentry_user }} -c 'sudo /home/{{ sentry_user }}/.virtualenvs/{{ sentry_virtualenv }}/bin/pip install -U sentry'
+  command: su - {{ sentry_user }} -c '/home/{{ sentry_user }}/.virtualenvs/{{ sentry_virtualenv }}/bin/pip install -U sentry'
   when: pip.stdout == ""
 
+
+- name: pip isntall mysql-python
+  command: su - {{ sentry_user }} -c '/home/{{ sentry_user }}/.virtualenvs/{{ sentry_virtualenv }}/bin/pip install mysql-python'

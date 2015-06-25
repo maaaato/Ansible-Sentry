@@ -1,0 +1,34 @@
+{
+  "variables": {
+      "aws_access_key": "",
+      "aws_secret_key": ""
+  },
+  "builders": [{
+      "type": "amazon-ebs",
+      "access_key": "{{user `aws_access_key`}}",
+      "secret_key": "{{user `aws_secret_key`}}",
+      "region": "ap-northeast-1",
+      "source_ami": "ami-936d9d93",
+      "instance_type": "t2.micro",
+      "ssh_timeout": "5m",      
+      "ssh_username": "ubuntu",
+      "ami_name": "sentry7.5.4 {{timestamp}}"
+  }],
+  "provisioners": [{
+    "type": "shell",
+    "inline": [
+        "sudo apt-get -y update",
+        "sudo apt-get install -y gcc g++ autoconf python2.7-dev",        
+        "sudo wget https://bootstrap.pypa.io/get-pip.py",
+        "sudo python get-pip.py",
+        "sudo pip install ansible"
+    ]
+  },{
+      "type": "ansible-local",
+      "playbook_file": "production.yml",
+      "role_paths": ["roles/mysql",
+                     "roles/sentry",
+                     "roles/virtualenv"
+                    ]
+  }]
+}
