@@ -1,10 +1,10 @@
 ---
 - hosts: all
   sudo: yes
-#  roles:
-#    - mysql
-#    - virtualenv
-#    - sentry
+  roles:
+    - mysql
+    - virtualenv
+    - sentry
     
   pre_tasks:
     - name: initial pkg install
